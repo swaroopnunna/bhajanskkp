@@ -86,13 +86,26 @@ function saveCachedSongs(songs, updatedAt) {
 
 // Fetch and normalize completed songs from the public spreadsheet.
 export async function fetchSongs() {
+
+  const configuredSheetId = String(SHEET_ID || "").trim();
+
   if (
-    !SHEET_ID ||
-    SHEET_ID === "1jpmKr-eecSDzO5RycAnSQ7MDzo6TeksoscKVP2eLxDQ"
-  ) {
-    throw new Error(
-      "Add your Google Sheet ID in js/config.js before using this page."
-    );
+  !configuredSheetId ||
+  configuredSheetId === "1jpmKr-eecSDzO5RycAnSQ7MDzo6TeksoscKVP2eLxDQ"
+    ) {
+  throw new Error(
+    "Google Sheet ID is missing. Check js/config.js."
+  );
+}
+
+    
+  //if (
+    //!SHEET_ID ||
+    //SHEET_ID === "1jpmKr-eecSDzO5RycAnSQ7MDzo6TeksoscKVP2eLxDQ"
+  //) {
+    //throw new Error(
+      //"Add your Google Sheet ID in js/config.js before using this page."
+    //);
   }
 
   // Build the public Google Visualization query URL.
