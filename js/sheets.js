@@ -9,7 +9,6 @@ function normalizeHeader(value = "") {
 }
 
 // Google Visualization wraps JSON in a JavaScript function call.
-// Extract the JSON object from that wrapper.
 function parseVisualizationResponse(rawText) {
   const start = rawText.indexOf("{");
   const end = rawText.lastIndexOf("}");
@@ -29,7 +28,7 @@ function cellValue(cell) {
 
 // Find the requested columns from the header labels.
 function readColumnIndexes(table) {
-  const headers = table.cols.map((col) =>
+  const headers = (table.cols || []).map((col) =>
     normalizeHeader(col.label || col.id || "")
   );
 
@@ -50,7 +49,7 @@ function readColumnIndexes(table) {
     ["singer", "singername", "participant"], 2
   );
 
-  if (table.cols.length < 2) {
+  if (headers.length < 2) {
     throw new Error(
       "The sheet needs at least Song Number and Song Name columns."
     );
@@ -86,44 +85,29 @@ function saveCachedSongs(songs, updatedAt) {
 
 // Fetch and normalize completed songs from the public spreadsheet.
 export async function fetchSongs() {
-
   const configuredSheetId = String(SHEET_ID || "").trim();
 
   if (
-  !configuredSheetId ||
-  configuredSheetId === "1jpmKr-eecSDzO5RycAnSQ7MDzo6TeksoscKVP2eLxDQ"
-    ) {
-  throw new Error(
-    "Google Sheet ID is missing. Check js/config.js."
-  );
-}
-
-    
-  //if (
-    //!SHEET_ID ||
-    //SHEET_ID === "1jpmKr-eecSDzO5RycAnSQ7MDzo6TeksoscKVP2eLxDQ"
-  //) {
-    //throw new Error(
-      //"Add your Google Sheet ID in js/config.js before using this page."
-    //);
+    !configuredSheetId ||
+    configuredSheetId === "PASTE_YOUR_SHEET_ID_HERE"
+  ) {
+    throw new Error(
+      "Google Sheet ID is missing. Check js/config.js."
+    );
   }
 
-  // Build the public Google Visualization query URL.
   const url = new URL(
-    `https://docs.google.com/spreadsheets/d/${encodeURIComponent(SHEET_ID)}/gviz/tq`
+    `https://docs.google.com/spreadsheets/d/${encodeURIComponent(
+      configuredSheetId
+    )}/gviz/tq`
   );
 
-  url.searchParams.set("gid", SHEET_GID);
+  url.searchParams.set("gid", String(SHEET_GID || "0"));
   url.searchParams.set("tqx", "out:json");
-  url.searchParams.set("headers", "1");
 
   const response = await fetch(url.toString(), {
     method: "GET",
-    cache: "no-store",
-    mode: "cors",
-    headers: {
-      Accept: "text/plain, application/json, */*"
-    }
+    cache: "no-store"
   });
 
   if (!response.ok) {
@@ -145,7 +129,7 @@ export async function fetchSongs() {
   const table = payload.table;
   const columns = readColumnIndexes(table);
 
-  const songs = table.rows
+  const songs = (table.rows || [])
     .map((row, index) => {
       const cells = row.c || [];
 
@@ -156,9 +140,7 @@ export async function fetchSongs() {
         singer: cellValue(cells[columns.singer])
       };
     })
-    // A song is complete only when Song Name is non-empty.
     .filter((song) => song.songName.length > 0)
-    // Song numbers are prefilled, so sort numerically for display.
     .sort((a, b) => {
       const aNum = Number(a.songNumber);
       const bNum = Number(b.songNumber);
