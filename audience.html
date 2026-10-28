@@ -1,0 +1,64 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>Bhajan — Audience Song List</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body class="audience-page">
+  <main class="audience-shell">
+    <header class="audience-header">
+      <div class="brand-mark" aria-hidden="true">ॐ</div>
+
+      <div class="brand-copy">
+        <p class="eyebrow">LIVE BHAJAN</p>
+        <h1>Song List</h1>
+      </div>
+
+      <!-- Telugu affects song and singer values, not UI labels. -->
+      <label class="language-control" for="language-select">
+        <span>Language</span>
+        <select id="language-select" aria-label="Song language">
+          <option value="en">English</option>
+          <option value="te">Telugu</option>
+        </select>
+      </label>
+    </header>
+
+    <section class="audience-current" aria-label="Current song">
+      <div class="current-label">Current Song:</div>
+      <div id="current-number"
+           class="audience-current-number"
+           aria-live="polite">—</div>
+      <p>Song Number</p>
+    </section>
+
+    <div class="list-heading-row">
+      <h2>Completed Songs</h2>
+      <span id="last-updated" class="updated">
+        Not updated yet
+      </span>
+    </div>
+
+    <div id="status"
+         class="status-banner"
+         role="status"
+         hidden></div>
+
+    <section id="audience-song-list"
+             class="audience-song-list"
+             aria-label="Completed songs">
+      <div class="empty-state">Loading songs…</div>
+    </section>
+
+    <footer class="page-footer">
+      Updates automatically while this page is open.
+    </footer>
+  </main>
+
+  <script type="module" src="./js/audience.js"></script>
+</body>
+</html>

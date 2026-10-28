@@ -1,0 +1,50 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071426">
+  <title>Bhajan — TV Display</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body class="tv-page">
+  <main class="tv-layout">
+    <!-- Left panel: large number visible from across the room. -->
+    <section class="current-panel" aria-label="Current song">
+      <div class="eyebrow">CURRENT SONG</div>
+      <div id="current-number"
+           class="tv-current-number"
+           aria-live="polite">—</div>
+      <div class="current-caption">Song Number</div>
+      <div class="tv-footer">Bhajan • Live song list</div>
+    </section>
+
+    <!-- Right panel: scrolling completed songs. -->
+    <section class="tv-list-panel" aria-label="Completed songs">
+      <header class="tv-list-header">
+        <div>
+          <div class="eyebrow">LIVE PLAYLIST</div>
+          <h1>Completed Songs</h1>
+        </div>
+        <div id="last-updated" class="updated">
+          Not updated yet
+        </div>
+      </header>
+
+      <div id="status"
+           class="status-banner"
+           role="status"
+           hidden></div>
+
+      <div class="marquee-window">
+        <div id="song-list"
+             class="marquee-track"
+             aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./js/tv.js"></script>
+</body>
+</html>

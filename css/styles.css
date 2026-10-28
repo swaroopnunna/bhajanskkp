@@ -1,0 +1,538 @@
+
+/* =========================================================
+   Shared colors, reset, and basic status messages
+   ========================================================= */
+:root {
+  color-scheme: light;
+  --ink: #172033;
+  --muted: #657089;
+  --navy: #071426;
+  --gold: #f5c96a;
+  --line: #e3e8f0;
+  --surface: #fff;
+  --page: #f4f6fa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: .18em;
+}
+
+.updated {
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.4;
+}
+
+.status-banner {
+  padding: .75rem 1rem;
+  border-radius: .8rem;
+  font-size: .9rem;
+  line-height: 1.4;
+}
+
+.status-banner[data-kind="error"] {
+  color: #9e2922;
+  background: #fff0ef;
+}
+
+.status-banner[data-kind="warning"] {
+  color: #775300;
+  background: #fff6df;
+}
+
+.status-banner[data-kind="info"] {
+  color: #234f86;
+  background: #eaf3ff;
+}
+
+.empty-state {
+  padding: 2rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* =========================================================
+   TV PAGE
+   Designed primarily for 1920 x 1080.
+   Left: current song. Right: scrolling completed songs.
+   ========================================================= */
+.tv-page {
+  min-height: 100vh;
+  overflow: hidden;
+  color: #f8fbff;
+  background: var(--navy);
+}
+
+.tv-layout {
+  display: grid;
+  grid-template-columns: minmax(350px, 38%) minmax(0, 62%);
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+}
+
+.current-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3vw;
+  text-align: center;
+  background: linear-gradient(145deg, #10233e, #071426 80%);
+  border-right: 1px solid rgba(255, 255, 255, .12);
+}
+
+.current-panel .eyebrow {
+  color: var(--gold);
+  font-size: clamp(1rem, 1.5vw, 1.6rem);
+}
+
+.tv-current-number {
+  margin: 1.2rem 0 .3rem;
+  color: #fff;
+  font-size: clamp(8rem, 21vw, 24rem);
+  font-weight: 900;
+  letter-spacing: -.075em;
+  line-height: .95;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 12px 50px rgba(0, 0, 0, .28);
+}
+
+.current-caption {
+  color: #b7c4d9;
+  font-size: clamp(1rem, 1.5vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.tv-footer {
+  margin-top: auto;
+  padding-top: 2rem;
+  color: #7e91ad;
+  font-size: .85rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.tv-list-panel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 2.2vw 2.5vw 0;
+  background: #0b192d;
+}
+
+.tv-list-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .15);
+}
+
+.tv-list-header .eyebrow {
+  color: var(--gold);
+}
+
+.tv-list-header h1 {
+  margin: .4rem 0 0;
+  font-size: clamp(1.8rem, 3vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.tv-list-header .updated {
+  color: #9fb0c8;
+  text-align: right;
+}
+
+.tv-list-panel .status-banner {
+  margin-top: .8rem;
+}
+
+/* The window clips the scrolling content. */
+.marquee-window {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  margin-top: 1rem;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 3%,
+    #000 97%,
+    transparent 100%
+  );
+}
+
+/* The JS supplies the exact travel distance and duration. */
+.marquee-track {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  animation: marquee-scroll var(--marquee-duration, 30s) linear infinite;
+}
+
+.marquee-track:hover,
+.marquee-track:focus-within {
+  animation-play-state: paused;
+}
+
+.marquee-group {
+  flex: 0 0 auto;
+}
+
+.tv-song-row {
+  display: grid;
+  grid-template-columns: clamp(4.5rem, 6vw, 7.5rem) minmax(0, 1fr);
+  gap: 1.2rem;
+  align-items: center;
+  min-height: 112px;
+  padding: 1.15rem .2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .09);
+}
+
+.tv-song-number {
+  display: grid;
+  place-items: center;
+  width: clamp(3.8rem, 5.2vw, 6rem);
+  height: clamp(3.8rem, 5.2vw, 6rem);
+  border-radius: 1rem;
+  color: #151e2d;
+  background: var(--gold);
+  font-size: clamp(1.8rem, 2.6vw, 3rem);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.tv-song-details {
+  min-width: 0;
+}
+
+.tv-song-name {
+  overflow-wrap: anywhere;
+  color: #f6f8fc;
+  font-size: clamp(1.35rem, 2vw, 2.35rem);
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.tv-song-singer {
+  margin-top: .35rem;
+  color: #a9bad2;
+  font-size: clamp(1rem, 1.35vw, 1.55rem);
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateY(calc(-1 * var(--marquee-distance, 0px)));
+  }
+}
+
+.marquee-track.no-motion {
+  animation: none;
+}
+
+/* =========================================================
+   AUDIENCE PAGE
+   Mobile-first layout with responsive song cards.
+   ========================================================= */
+.audience-page {
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--page);
+}
+
+.audience-shell {
+  width: min(100% - 2rem, 820px);
+  margin: 0 auto;
+  padding: 1.25rem 0 2rem;
+}
+
+.audience-header {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .4rem 0 1.2rem;
+}
+
+.brand-mark {
+  display: grid;
+  flex: 0 0 3rem;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  color: #6e4300;
+  background: #ffe6aa;
+  font-size: 1.7rem;
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.brand-copy .eyebrow {
+  color: #a36a08;
+  font-size: .68rem;
+}
+
+.brand-copy h1 {
+  margin: .18rem 0 0;
+  font-size: 1.3rem;
+}
+
+/* Language selector remains accessible on narrow screens. */
+.language-control {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  margin-left: auto;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.language-control select {
+  max-width: 8.5rem;
+  min-height: 2.65rem;
+  padding: 0 .7rem;
+  border: 1px solid #d9dfeb;
+  border-radius: .8rem;
+  color: var(--ink);
+  background: #fff;
+  font-size: .9rem;
+}
+
+/* Current song remains prominent but smaller than the TV number. */
+.audience-current {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: .15rem 1rem;
+  padding: 1.25rem 1.4rem;
+  border-radius: 1.25rem;
+  color: #fff;
+  background: linear-gradient(120deg, #132b4a, #071426);
+  box-shadow: 0 12px 30px rgba(15, 34, 62, .12);
+}
+
+.current-label {
+  color: #d5dfed;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.audience-current-number {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  color: var(--gold);
+  font-size: clamp(3.5rem, 17vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: -.07em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.audience-current p {
+  margin: .2rem 0 0;
+  color: #aebed3;
+  font-size: .78rem;
+}
+
+.list-heading-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .8rem;
+  margin: 1.6rem 0 .8rem;
+}
+
+.list-heading-row h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.list-heading-row .updated {
+  text-align: right;
+  font-size: .7rem;
+}
+
+.audience-shell > .status-banner {
+  margin: .75rem 0;
+}
+
+.audience-song-list {
+  display: grid;
+  gap: .7rem;
+}
+
+/* Song number is visually distinct from song and singer details. */
+.song-card {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: .85rem;
+  align-items: start;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--surface);
+  box-shadow: 0 4px 14px rgba(20, 35, 65, .035);
+}
+
+.song-card-number {
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  min-height: 2.8rem;
+  border-radius: .8rem;
+  color: #6b4300;
+  background: #fff0c9;
+  font-size: 1rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.song-card-body {
+  min-width: 0;
+}
+
+.song-card-name {
+  margin: .15rem 0 0;
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.song-card-singer {
+  margin: .35rem 0 0;
+  color: var(--muted);
+  font-size: .87rem;
+  overflow-wrap: anywhere;
+}
+
+.page-footer {
+  padding: 1.5rem 0 .5rem;
+  color: #8490a4;
+  font-size: .78rem;
+  text-align: center;
+}
+
+/* Tablet and larger audience screens. */
+@media (min-width: 700px) {
+  .audience-shell {
+    padding-top: 2rem;
+  }
+
+  .audience-header {
+    padding-bottom: 1.5rem;
+  }
+
+  .song-card {
+    grid-template-columns: 3.4rem minmax(0, 1fr);
+    padding: 1.1rem 1.2rem;
+  }
+
+  .song-card-number {
+    width: 3rem;
+    min-height: 3rem;
+  }
+
+  .song-card-name {
+    font-size: 1.12rem;
+  }
+}
+
+/* Smaller TV/browser windows. */
+@media (max-width: 900px) {
+  .tv-layout {
+    grid-template-columns: minmax(240px, 34%) minmax(0, 66%);
+  }
+
+  .tv-song-row {
+    min-height: 88px;
+  }
+}
+
+/* Stack the TV layout if the TV page is opened on a phone. */
+@media (max-width: 640px) {
+  .tv-page {
+    overflow: auto;
+  }
+
+  .tv-layout {
+    display: flex;
+    height: auto;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  .current-panel {
+    min-height: 38vh;
+    padding: 1.5rem;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+  }
+
+  .tv-current-number {
+    font-size: clamp(6rem, 28vw, 10rem);
+  }
+
+  .tv-footer {
+    margin-top: 1rem;
+    padding-top: .5rem;
+  }
+
+  .tv-list-panel {
+    min-height: 62vh;
+    padding: 1.25rem;
+  }
+
+  .tv-list-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .tv-song-row {
+    min-height: 84px;
+  }
+
+  .tv-song-name {
+    font-size: 1.2rem;
+  }
+}
+
+/* Respect accessibility settings for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+
+  .marquee-track {
+    animation: none !important;
+  }
+}
